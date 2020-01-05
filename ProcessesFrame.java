@@ -128,22 +128,17 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 			statisticsArray = new ArrayList<Process>();
 			ArrayList <Process> inUseList = new ArrayList <Process>();
 			int time=0;
-			//int time = inUseList.get(0).getBurstTime();
+			int done=0;
+			System.out.println("---Intervali Kohor , Procesi---");
 			for (int t=0; t<=time;t++) {
-				
-				int iterator = -1;
 				for (Process p : processesList) {
-					iterator++;
 					if (p.getArrivalTime()==t) {
-						//Process removedP = processesList.remove(iterator);
 						inUseList.add(p);
-						//System.out.println("U shtua procesi: "+p+" me indeks "+iterator+" ne kohen: "+t);
-						//iterator--;
 					}
 				}
 
 				Process currentProcess = inUseList.get(0);
-				time+=currentProcess.getBurstTime();
+				time+=currentProcess.getBurstTime()+1;
 				
 				//Ndalimi i nje procesi si rezultat i gjetjes se nje procesi me nje prioritet me te 
 				int hPIndex = highestPriorityIndex(inUseList);
@@ -155,17 +150,19 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 				}
 				
 				currentProcess.inUse(t);
+				
 				if (currentProcess.getBurstTime()==0) {
+					done++;
 					Process process = inUseList.remove(0);
 					statisticsArray.add(process);
 				}
 				
 				System.out.println("Time: "+t+"-"+(t+1)+" , Process: "+currentProcess.getTitle());
 				
-				//STATISTICS
-				if (inUseList.size()==0) {
+				//STATISTIKA
+				if (done==processesList.size()) {
 					
-					System.out.println("\n---STATISTICS----");
+					System.out.println("\n---STATISTIKA----");
 					double sumPritja = 0; double sumQendrimi = 0;
 					sortArray(statisticsArray);
 					
