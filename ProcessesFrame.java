@@ -123,29 +123,47 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 			model.addRow(newRow);
 			
 		}
+		
 		else if (event.getSource()==runButton) {
 			statisticsArray = new ArrayList<Process>();
-			
-			int time = processesList.get(0).getBurstTime();
+			ArrayList <Process> inUseList = new ArrayList <Process>();
+			int time=0;
+			//int time = inUseList.get(0).getBurstTime();
 			for (int t=0; t<=time;t++) {
-				Process currentProcess = processesList.get(0);
+				
+				int iterator = -1;
+				for (Process p : processesList) {
+					iterator++;
+					if (p.getArrivalTime()==t) {
+						//Process removedP = processesList.remove(iterator);
+						inUseList.add(p);
+						//System.out.println("U shtua procesi: "+p+" me indeks "+iterator+" ne kohen: "+t);
+						//iterator--;
+					}
+				}
+
+				Process currentProcess = inUseList.get(0);
 				time+=currentProcess.getBurstTime();
-				int hPIndex = highestPriorityIndex(processesList,t);
+				
+				//Ndalimi i nje procesi si rezultat i gjetjes se nje procesi me nje prioritet me te 
+				int hPIndex = highestPriorityIndex(inUseList);
 				if (hPIndex!=0) {
-					Collections.swap(processesList, 0, hPIndex);
-					Process removedP = processesList.remove(hPIndex);
-					processesList.add(removedP);
-					currentProcess=processesList.get(0);
+					Collections.swap(inUseList, 0, hPIndex);
+					Process removedP = inUseList.remove(hPIndex);
+					inUseList.add(removedP);
+					currentProcess=inUseList.get(0);
 				}
 				
 				currentProcess.inUse(t);
 				if (currentProcess.getBurstTime()==0) {
-					Process process = processesList.remove(0);
+					Process process = inUseList.remove(0);
 					statisticsArray.add(process);
 				}
 				
 				System.out.println("Time: "+t+"-"+(t+1)+" , Process: "+currentProcess.getTitle());
-				if (processesList.size()==0) {
+				
+				//STATISTICS
+				if (inUseList.size()==0) {
 					
 					System.out.println("\n---STATISTICS----");
 					double sumPritja = 0; double sumQendrimi = 0;
@@ -167,13 +185,13 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 		}
 	}
 	
-	public int highestPriorityIndex (ArrayList <Process> list,int time) {
+	public int highestPriorityIndex (ArrayList <Process> list) {
 		int index = 0;
 		int iter = 0;
 		int min = list.get(0).getPriority();
 		
 		for (Process p : list) {
-			if (p.getPriority()<min && p.getArrivalTime()<=time) {
+			if (p.getPriority()<min) {
 				min=p.getPriority();
 				index=iter;
 			}
