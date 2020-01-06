@@ -35,10 +35,7 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 	private JButton addButton;
 
 	private JTable processTable;
-	private static int count = 0;
 	private ArrayList<Process> processesList;
-	private ArrayList <Process> statisticsArray;
-	
 	
 	public ProcessesFrame () {
 		setTitle("Skedulimi me Prioritet Ndalues");
@@ -102,7 +99,7 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 	
 	private void createSouthPanel() {
 		southPanel = new JPanel();
-		
+		southPanel.add(new JLabel("Evald Nexhipi"));
 		add(southPanel,BorderLayout.SOUTH);
 	}
 
@@ -111,9 +108,8 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 		if (event.getSource()==addButton) {
 			DefaultTableModel model = (DefaultTableModel) processTable.getModel();
 			Vector newRow = new Vector <String>();
-			count++;
 			
-			Process p = new Process (count,Integer.parseInt(arrivalTimeField.getText()),Integer.parseInt(burstTimeField.getText()),Integer.parseInt(priorityField.getText()));
+			Process p = new Process (Integer.parseInt(arrivalTimeField.getText()),Integer.parseInt(burstTimeField.getText()),Integer.parseInt(priorityField.getText()));
 			processesList.add(p);
 			
 			newRow.add(p.getNumber());
@@ -123,13 +119,13 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 			model.addRow(newRow);
 			
 		}
-		
+		/* ------------ ALGORITMI ------------- */
 		else if (event.getSource()==runButton) {
-			statisticsArray = new ArrayList<Process>();
 			ArrayList <Process> inUseList = new ArrayList <Process>();
 			int time=0;
 			int done=0;
 			System.out.println("---Intervali Kohor , Procesi---");
+			
 			for (int t=0; t<=time;t++) {
 				for (Process p : processesList) {
 					if (p.getArrivalTime()==t) {
@@ -138,9 +134,8 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 				}
 
 				Process currentProcess = inUseList.get(0);
-				time+=currentProcess.getBurstTime()+1;
-				
-				//Ndalimi i nje procesi si rezultat i gjetjes se nje procesi me nje prioritet me te 
+				time+=currentProcess.getBurstTime();
+				 
 				int hPIndex = highestPriorityIndex(inUseList);
 				if (hPIndex!=0) {
 					Collections.swap(inUseList, 0, hPIndex);
@@ -150,37 +145,35 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 				}
 				
 				currentProcess.inUse(t);
-				
 				if (currentProcess.getBurstTime()==0) {
 					done++;
-					Process process = inUseList.remove(0);
-					statisticsArray.add(process);
+					inUseList.remove(0);
 				}
-				
 				System.out.println("Time: "+t+"-"+(t+1)+" , Process: "+currentProcess.getTitle());
 				
-				//STATISTIKA
+				/* ---------- STATISTIKA ---------- */
 				if (done==processesList.size()) {
 					
 					System.out.println("\n---STATISTIKA----");
 					double sumPritja = 0; double sumQendrimi = 0;
-					sortArray(statisticsArray);
 					
-					for (Process pr : statisticsArray) {
+					for (Process pr : processesList) {
 						sumPritja+=pr.getKohaPritjes();
 						sumQendrimi+=pr.getKohaQendrimit();
 						System.out.println(pr.getTitle()+" Koha e pritjes: "+pr.getKohaPritjes()+" | "+"Koha e qendrimit: "+pr.getKohaQendrimit());
 					}
 					
-					double mesPritja = sumPritja / statisticsArray.size();
-					double mesQendrimi = sumQendrimi / statisticsArray.size();
+					double mesPritja = sumPritja / processesList.size();
+					double mesQendrimi = sumQendrimi / processesList.size();
 					System.out.println("Koha mesatare e pritjes: "+mesPritja);
 					System.out.println("Koha mesatare e qendrimit: "+mesQendrimi);
 					break;
 				}
+				/* ---------- STATISTIKA ---------- */
 			}		
 		}
 	}
+	/* ------------ ALGORITMI ------------- */
 	
 	public int highestPriorityIndex (ArrayList <Process> list) {
 		int index = 0;
@@ -195,15 +188,5 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 			iter++;
 		}
 		return index;
-	}
-	
-	public void sortArray (ArrayList <Process> array) {
-		for (int i=0; i<array.size();i++) {
-			for (int j=i+1; j<array.size(); j++) {
-				if (array.get(j).getNumber()<array.get(i).getNumber()) {
-					Collections.swap(array, i, j);
-				}
-			}
-		}
 	}
 }
