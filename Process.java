@@ -4,11 +4,11 @@ public class Process {
 	private int number;
 	private String title;
 	private int arrivalTime;
-	private int burstTime;
-	private int burstTime2;
+	private int burstTime; //permban kohen e ekzekutimit te procesit e cila mund te ndryshoje gjate ekzekutimit te algoritmit
+	private int burstTime2;//permban kohen e ekzekutimit te procesit e cila nuk do te ndryshohet por do te mbahet per qellime statistikore
 	private int priority;
-	private static int numberSerial = 0;
-	private ArrayList <Integer>timeSections;
+	private static int numberSerial = 0; //variabel statitike qe do te na ndihmoje ne gjenerimin e nje numri unik identifikues per proceset e krijuar
+ 	private ArrayList <Integer>timeSections;//kjo strukture te dhenash do te ruaje seksionet kohore kur procesi ka qene ne perdorim (per qellime statistikore)
 	
 	public Process () {
 		numberSerial++;
@@ -20,7 +20,7 @@ public class Process {
 	}
 	
 	public Process (int arrivalTime, int burstTime, int priority) {
-		numberSerial++;
+		numberSerial++; //gjenerimi i nje numri unik per cdo proces te krijuar
 		this.number=numberSerial;
 		this.title="P"+number;
 		this.arrivalTime=arrivalTime;
@@ -70,13 +70,19 @@ public class Process {
 	}
 	
 	public void inUse (int time) {
-		timeSections.add(time);
-		burstTime--;
+		/* Nqs nje proces ka marre kontrollin e CPU */
+		burstTime--; //Reduktojme kohen e ekzekutimit te procesit
+		timeSections.add(time); //vendosim intervalin kohor kur procesi eshte ne ekzekutim ne timeSections
 	}
 	
 	public int getKohaPritjes () {
+		//Koha e pritjes fillimisht per nje proces eshte diferenca e momentit te pare qe ai merr kontrollin e CPU me kohen e mberritjes se tij
 		int time=timeSections.get(0)-this.arrivalTime;
+		//Per secilin prej seksioneve kohore
 		for (int i=0; i<timeSections.size()-1;i++) {
+			/*Nqs diferenca e seksioneve kohore (te njepasnjeshem) eshte me e madhe se 1 (pra ai nuk eshte ne ekzekutim por ne pritje)
+			  kjo diference i shtohet kohes se pritjes.
+			*/
 			int dif = timeSections.get(i+1)-timeSections.get(i);
 			if (dif>1)
 				time+=dif-1;
@@ -85,6 +91,7 @@ public class Process {
 	}
 	
 	public int getKohaQendrimit() {
+		//Koha e Qendrimit te procesit do te llogaritet si me poshte:
 		return getKohaPritjes()+this.burstTime2;
 	}
 }
