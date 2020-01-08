@@ -94,4 +94,8 @@ public class Process {
 		//Koha e Qendrimit te procesit do te llogaritet si me poshte:
 		return getKohaPritjes()+this.burstTime2;
 	}
+	
+	public ArrayList <Integer> getTimeSections(){
+		return this.timeSections;
+	}
 }
