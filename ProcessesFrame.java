@@ -221,31 +221,33 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 	}
 	
 	public static String afishoGantt(ArrayList <Process> list,int maxTime) {
-		int leftInterval=0;
-		int intervalDuration=1;
-		String result=leftInterval+"";
-		for (int i=0; i<=maxTime; i++) {
+		/*Metode per paraqitjen e diagrames se Gantt-it*/
+		int leftInterval=0; //variabel qe do te mbaje vleren e njeres ane te Intervalit
+		int intervalDuration=1; //variabel qe do te ruaje gjatesine e intervalit qe nje proces eshte ne ekzekutim
+		String result=leftInterval+""; //variabli ne te cilen do te ruhet resultati
+		for (int i=0; i<=maxTime; i++) { 
 			Process p1=findProcessInTimeSection(list, i);
 			Process p2=findProcessInTimeSection(list, i+1);
-			if (p1==p2 && i < maxTime) {
+			if (p1==p2 && i < maxTime) { //nese ne intervalin njesi (i,i+1) kemi te njejtin proces ne ekzekutim atehere shtojme vleren e intervalDuration
 				intervalDuration++;
 			}
 			else {
-				leftInterval+=intervalDuration;
-				result+="--{"+p1.getTitle()+"}--"+leftInterval;
-				intervalDuration=1;
+				leftInterval+=intervalDuration; //update-ojme vleren e leftInterval
+				result+="--{"+p1.getTitle()+"}--"+leftInterval; 
+				intervalDuration=1; //rivendosim vleren e meparshme te intervalDuration per te gjetur kohezgjatjen e intervaleve te tjere per procese te tjere
 			}
 		}
 		return result;
 	}
 	
 	public static Process findProcessInTimeSection (ArrayList <Process> list, int time) {
+		/*Metode per gjetjen e procesit ne ekzekutim ne seksionin kohor time te dhene si parameter implicid*/
 		for (Process p : list) {
 			for (Integer i : p.getTimeSections()) {
-				if (i==time)
-					return p;
+				if (i==time) //nqs procesi e permban kete seksion kohor
+					return p; //metoda kthen kete proces
 			}
 		}
-		return null;
+		return null; //perndryshe nuk kthen asnje proces
 	}
 }
