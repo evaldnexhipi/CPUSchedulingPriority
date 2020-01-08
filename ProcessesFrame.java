@@ -27,6 +27,7 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 	private JLabel arrivalTimeLabel;
 	private JLabel burstTimeLabel;
 	private JLabel priorityLabel;
+	private JLabel ganttLabel;
 	private JButton runButton;
 	
 	private JTextField arrivalTimeField;
@@ -103,6 +104,9 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 	
 	private void createSouthPanel() {
 		southPanel = new JPanel();
+		southPanel.setLayout(new GridLayout(2, 1));
+		ganttLabel = new JLabel();
+		southPanel.add(ganttLabel);
 		southPanel.add(new JLabel("Evald Nexhipi"));
 		add(southPanel,BorderLayout.SOUTH);
 	}
@@ -189,6 +193,8 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 					double mesQendrimi = sumQendrimi / processesList.size();
 					System.out.println("Koha mesatare e pritjes: "+mesPritja);
 					System.out.println("Koha mesatare e qendrimit: "+mesQendrimi);
+					
+					ganttLabel.setText("GANTT Chart: "+afishoGantt(processesList,t));
 					break; //Mund te perfundojme ciklin pasi kemi perfunduar me trajtimin e proceseve
 				}
 				/* ---------- STATISTIKA ---------- */
@@ -212,5 +218,34 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 			iter++;
 		}
 		return index;
+	}
+	
+	public static String afishoGantt(ArrayList <Process> list,int maxTime) {
+		int leftInterval=0;
+		int intervalDuration=1;
+		String result=leftInterval+"";
+		for (int i=0; i<=maxTime; i++) {
+			Process p1=findProcessInTimeSection(list, i);
+			Process p2=findProcessInTimeSection(list, i+1);
+			if (p1==p2 && i < maxTime) {
+				intervalDuration++;
+			}
+			else {
+				leftInterval+=intervalDuration;
+				result+="--{"+p1.getTitle()+"}--"+leftInterval;
+				intervalDuration=1;
+			}
+		}
+		return result;
+	}
+	
+	public static Process findProcessInTimeSection (ArrayList <Process> list, int time) {
+		for (Process p : list) {
+			for (Integer i : p.getTimeSections()) {
+				if (i==time)
+					return p;
+			}
+		}
+		return null;
 	}
 }
