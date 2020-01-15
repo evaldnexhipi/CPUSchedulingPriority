@@ -5,7 +5,7 @@ public class Process {
 	private String title;
 	private int arrivalTime;
 	private int burstTime; //permban kohen e ekzekutimit te procesit e cila mund te ndryshoje gjate ekzekutimit te algoritmit
-	private int burstTime2;//permban kohen e ekzekutimit te procesit e cila nuk do te ndryshohet por do te mbahet per qellime statistikore
+	private int burstTime2;//permban kohen e ekzekutimit te procesit e cila nuk do te ndryshohet por do te mbahet fikse per qellime statistikore
 	private int priority;
 	private static int numberSerial = 0; //variabel statitike qe do te na ndihmoje ne gjenerimin e nje numri unik identifikues per proceset e krijuar
  	private ArrayList <Integer>timeSections;//kjo strukture te dhenash do te ruaje seksionet kohore kur procesi ka qene ne perdorim (per qellime statistikore)
@@ -65,6 +65,10 @@ public class Process {
 		this.priority=priority;
 	}
 	
+	public ArrayList <Integer> getTimeSections(){
+		return this.timeSections;
+	}
+	
 	public String toString() {
 		return "Process[title="+this.title+", arrivalTime="+this.arrivalTime+", burstTime="+this.burstTime+", priority="+this.priority+"]";
 	}
@@ -93,9 +97,5 @@ public class Process {
 	public int getKohaQendrimit() {
 		//Koha e Qendrimit te procesit do te llogaritet si me poshte:
 		return getKohaPritjes()+this.burstTime2;
-	}
-	
-	public ArrayList <Integer> getTimeSections(){
-		return this.timeSections;
 	}
 }
