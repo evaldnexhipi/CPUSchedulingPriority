@@ -43,7 +43,7 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 		setSize(FRAME_WIDTH,FRAME_HEIGHT);
 		processesList= new ArrayList <Process>();
 		
-		//Metodat per ndertimin e Nderfaqjes Grafike
+		//Metodat per ndertimin e Nderfaqes Grafike
 		createNorthPanel();
 		createCenterPanel();
 		createSouthPanel();
@@ -90,7 +90,6 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 		columnNames.add("Priority");
 		
 		Vector data = new Vector<Object>();
-		Vector data1 = new Vector <String>();
 		//Inicializimi i JTable
 		processTable = new JTable(data,columnNames);
 		
@@ -123,7 +122,7 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 			//Procesi i krijuar shtohet ne ArrayList <Process> processesList
 			processesList.add(p);
 			
-			//Bejme paraqitjen e procesit te shtuar ne JTable-in e pozicionuar ne qender
+			//Bejme paraqitjen e procesit te shtuar ne JTable-in e pozicionuar ne qender te JFrame
 			newRow.add(p.getNumber());
 			newRow.add(p.getArrivalTime());
 			newRow.add(p.getBurstTime());
@@ -157,7 +156,7 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 				//ne rradhen inUseList kontrollojme nqs gjejme nje proces me prioritet me te madh se ai korrent  
 				int hPIndex = highestPriorityIndex(inUseList);
 				if (hPIndex!=0) { //Nqs gjendet nje proces me prioritet me te madh se ai korrent atehere
-					//Zevendosjme kete proces me indeksin hPIndex me procesin e pare ne rradhe me indeks 0
+					//Zevendosjme kete proces me indeks hPIndex,me procesin e pare ne rradhe me indeks 0
 					Collections.swap(inUseList, 0, hPIndex);
 					//Heqim procesin e meparshem nga rradha
 					Process removedP = inUseList.remove(hPIndex);
@@ -193,7 +192,7 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 					double mesQendrimi = sumQendrimi / processesList.size();
 					System.out.println("Koha mesatare e pritjes: "+mesPritja);
 					System.out.println("Koha mesatare e qendrimit: "+mesQendrimi);
-					
+					//shtojme diagramen e Gantt-it te ganttLabel
 					ganttLabel.setText("GANTT Chart: "+afishoGantt(processesList,t));
 					break; //Mund te perfundojme ciklin pasi kemi perfunduar me trajtimin e proceseve
 				}
@@ -224,7 +223,7 @@ public class ProcessesFrame extends JFrame implements ActionListener{
 		/*Metode per paraqitjen e diagrames se Gantt-it*/
 		int leftInterval=0; //variabel qe do te mbaje vleren e njeres ane te Intervalit
 		int intervalDuration=1; //variabel qe do te ruaje gjatesine e intervalit qe nje proces eshte ne ekzekutim
-		String result=leftInterval+""; //variabli ne te cilen do te ruhet resultati
+		String result=leftInterval+""; //variabli ne te cilen do te ruhet rezultati
 		for (int i=0; i<=maxTime; i++) { 
 			Process p1=findProcessInTimeSection(list, i);
 			Process p2=findProcessInTimeSection(list, i+1);
